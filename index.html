@@ -117,18 +117,16 @@ footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid va
         <a href="https://www.cdc.gov.tw/" target="_blank" rel="noopener">衛福部疾管署</a>
         <a href="https://www.moa.gov.tw/" target="_blank" rel="noopener">農業部</a></div>
       <div><span class="sg">學術資料庫</span>
-        <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">PubMed</a>
-        <a href="https://www.scopus.com/" target="_blank" rel="noopener">Scopus</a>
-        <a href="https://www.webofscience.com/" target="_blank" rel="noopener">Web of Science</a></div>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">PubMed</a></div>
     </div>
-    <p class="disclaimer">每週一自動更新，收錄範圍自 2026/9/1 起。摘要由 AI 依文獻摘要或原文整理，經人工審查前僅供參考，請以原始文件為準。</p>
+    <p class="disclaimer">官方公告、新聞與政策：每週一更新，全部收錄。學術文獻：每月 25 日更新，精選 8–12 篇（涵蓋上月 25 日至當月 24 日）。收錄範圍自 2026/9/1 起；摘要由 AI 依原始文件或文獻摘要整理，經人工審查前僅供參考，請以原始文件為準。</p>
   </section>
 
   <div class="seg" role="tablist">
     <button class="on" data-view="time">依時間</button>
     <button data-view="topic">依主題</button>
   </div>
-  <div class="rowlabel">週次（依發布日期）</div>
+  <div class="rowlabel">月份</div>
   <div class="chips" id="batchChips"></div>
   <div class="rowlabel">分類</div>
   <div class="chips" id="catChips"></div>
@@ -159,6 +157,18 @@ const CATS={
 };
 const WD="日一二三四五六";
 const NUM=["","一","二","三","四","五","六"];
+function periodOf(it){
+  const k=(it.source_type==="學術文獻"&&it.edition)?it.edition:it.pub_date.slice(0,7);
+  const [y,m]=k.split("-").map(Number);
+  return {key:k,label:`${y} 年 ${m} 月`};
+}
+function editionLabel(it){
+  if(it.source_type!=="學術文獻"||!it.edition)return "";
+  const [y,m]=it.edition.split("-").map(Number);
+  const pm=m===1?12:m-1;
+  const start=(y===2026&&m===9)?"9/1":`${pm}/25`;
+  return `${m}月文獻精選（${start}–${m}/24）`;
+}
 function weekOf(d){
   const [y,m,dd]=d.split("-").map(Number);
   const first=new Date(y,m-1,1), last=new Date(y,m,0).getDate();
@@ -179,7 +189,7 @@ const wd=d=>WD[new Date(d+"T00:00:00").getDay()];
 function filtered(ignore){
   const q=st.q.trim().toLowerCase();
   return DATA.items.filter(it=>{
-    if(ignore!=="batch"&&st.batch!=="all"&&weekOf(it.pub_date).key!==st.batch)return false;
+    if(ignore!=="batch"&&st.batch!=="all"&&periodOf(it).key!==st.batch)return false;
     if(ignore!=="cat"&&st.cat!=="all"&&String(it.category)!==st.cat)return false;
     if(ignore!=="src"&&st.src!=="all"&&it.source_type!==st.src)return false;
     if(q){const hay=[it.title_zh,it.title_en,it.source,it.summary,it.key_points,it.implication,it.report_cat,(it.keywords||[]).join(" "),CATS[it.category]?.n].join(" ").toLowerCase();if(!hay.includes(q))return false}
@@ -189,7 +199,7 @@ function filtered(ignore){
 function chipRow(el,key,entries,allLabel){
   const dot=v=>key==="cat"&&CATS[v]?`<span class="dot" style="--c:${CATS[v].c}"></span>`:"";
   const base=filtered(key);
-  const cnt=v=>base.filter(it=>(key==="batch"?weekOf(it.pub_date).key:key==="cat"?String(it.category):it.source_type)===v).length;
+  const cnt=v=>base.filter(it=>(key==="batch"?periodOf(it).key:key==="cat"?String(it.category):it.source_type)===v).length;
   let h=`<button class="chip ${st[key]==="all"?"on":""}" data-k="${key}" data-v="all">${allLabel}<small>${base.length}</small></button>`;
   for(const [v,label] of entries){h+=`<button class="chip ${st[key]===v?"on":""}" data-k="${key}" data-v="${esc(v)}">${dot(v)}${esc(label)}<small>${cnt(v)}</small></button>`}
   el.innerHTML=h;
@@ -197,22 +207,22 @@ function chipRow(el,key,entries,allLabel){
 function card(it){
   const c=CATS[it.category]||{n:"未分類",c:"#aaa",t:"#555"};
   return `<div class="item" style="--c:${c.c};--t:${c.t}" data-id="${esc(it.id)}" tabindex="0">
-    <div class="meta"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span>${esc(it.source)}</span></div>
+    <div class="meta"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span>${esc(it.source)}</span>${editionLabel(it)?`<span class="tag">${esc(editionLabel(it))}</span>`:""}</div>
     <span class="badge ${it.review==="已審"?"ok":""}">${esc(it.review||"待審")}</span>
     <div class="ttl">${esc(it.title_zh||it.title_en)}<span class="arrow">↗</span></div>
     ${it.title_en&&it.title_zh?`<div class="en">${esc(it.title_en)}</div>`:""}
     <div class="sum">${esc(it.summary)}</div></div>`;
 }
 function render(){
-  const wk=new Map();for(const i of DATA.items){const w=weekOf(i.pub_date);wk.set(w.key,w.label)}
-  chipRow($("#batchChips"),"batch",[...wk].sort((a,b)=>b[0].localeCompare(a[0])),"全部週次");
+  const wk=new Map();for(const i of DATA.items){const w=periodOf(i);wk.set(w.key,w.label)}
+  chipRow($("#batchChips"),"batch",[...wk].sort((a,b)=>b[0].localeCompare(a[0])),"全部月份");
   chipRow($("#catChips"),"cat",Object.keys(CATS).map(k=>[k,`${k}. ${CATS[k].n}`]),"全部分類");
   chipRow($("#srcChips"),"src",[["官方機構","官方機構"],["學術文獻","學術文獻"]],"全部來源");
   const items=filtered().sort((a,b)=>b.pub_date.localeCompare(a.pub_date));
   if(!items.length){$("#out").innerHTML=`<div class="empty">沒有符合條件的資料</div>`;return}
   const groups=new Map();
   if(st.view==="time"){
-    for(const it of items){const w=weekOf(it.pub_date);if(!groups.has(w.key))groups.set(w.key,{w,arr:[]});groups.get(w.key).arr.push(it)}
+    for(const it of items){const w=periodOf(it);if(!groups.has(w.key))groups.set(w.key,{w,arr:[]});groups.get(w.key).arr.push(it)}
     $("#out").innerHTML=[...groups.values()].sort((a,b)=>b.w.key.localeCompare(a.w.key)).map(({w,arr})=>`<section class="group"><h2>${w.label}<small>${arr.length} 則</small></h2><div class="list">${arr.map(card).join("")}</div></section>`).join("");
   }else{
     for(const it of items){const k=it.category;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(it)}
@@ -231,7 +241,7 @@ function openItem(id){
       ${row("內容摘要",esc(it.summary))}${row("重點摘譯",esc(it.key_points))}${row("國內管理意涵",esc(it.implication))}${row("建議後續追蹤",esc(it.follow_up))}
       ${it.keywords?.length?row("關鍵字",`<div class="kws">${it.keywords.map(k=>`<span>${esc(k)}</span>`).join("")}</div>`):""}
       ${row("識別碼",[it.doi?`DOI: ${esc(it.doi)}`:"",it.pmid?`PMID: ${esc(it.pmid)}`:""].filter(Boolean).join("　"))}
-      ${row("週次",esc(weekOf(it.pub_date).label))}${row("收錄日期",esc(it.batch))}
+      ${row("期別",esc(editionLabel(it)||periodOf(it).label))}${row("收錄日期",esc(it.batch))}
     </div>
     <div class="actions"><a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener">開啟原始連結 ↗</a><button class="btn ghost" id="closeBtn">關閉</button></div>
     <p class="note">摘要依據：${esc(it.basis||"—")}。AI 輔助整理，請以原始文件為準。</p>`;
