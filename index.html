@@ -207,7 +207,7 @@ function chipRow(el,key,entries,allLabel){
 function card(it){
   const c=CATS[it.category]||{n:"未分類",c:"#aaa",t:"#555"};
   return `<div class="item" style="--c:${c.c};--t:${c.t}" data-id="${esc(it.id)}" tabindex="0">
-    <div class="meta"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span>${esc(it.source)}</span>${editionLabel(it)?`<span class="tag">${esc(editionLabel(it))}</span>`:""}</div>
+    <div class="meta"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span>${esc(it.source)}</span></div>
     <span class="badge ${it.review==="已審"?"ok":""}">${esc(it.review||"待審")}</span>
     <div class="ttl">${esc(it.title_zh||it.title_en)}<span class="arrow">↗</span></div>
     ${it.title_en&&it.title_zh?`<div class="en">${esc(it.title_en)}</div>`:""}
