@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>環境抗生素抗藥性資訊匯流站</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%237fb2f0'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%230f1419' font-family='sans-serif' font-weight='700'%3EAMR%3C/text%3E%3C/svg%3E">
+<meta name="description" content="環境面化學物質與抗生素風險治理計畫：國際組織公告與學術文獻每週彙整">
+<style>
+:root{
+  --bg:#0f1419; --panel:#161c24; --panel2:#1b222c; --line:#2a323d; --line2:#343d4a;
+  --text:#e8ebef; --muted:#9aa4b1; --dim:#6f7a88; --accent:#7fb2f0; --accent-bg:#22344d;
+  --serif:"Noto Serif TC","Source Han Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:36px 24px 80px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-family:var(--serif);font-size:44px;font-weight:900;margin:0;letter-spacing:.02em;line-height:1.15}
+.updated{font-family:var(--mono);font-size:14px;color:var(--muted);padding-top:14px;white-space:nowrap}
+.sub{color:var(--muted);margin:14px 0 22px;font-size:15px}
+.sub b{color:var(--text);font-weight:500}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:16px}
+.seg button{all:unset;cursor:pointer;padding:7px 18px;border-radius:10px;color:var(--muted);font-size:15px}
+.seg button.on{background:var(--accent);color:#0d1620;font-weight:600}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px;scrollbar-width:thin}
+.chip{all:unset;cursor:pointer;flex:none;border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:6px 15px;font-size:14px;font-weight:600;white-space:nowrap}
+.chip small{font-family:var(--mono);font-weight:400;color:var(--dim);margin-left:6px;font-size:12px}
+.chip.on{background:var(--accent-bg);border-color:var(--accent);color:#cfe3fb}
+.chip.on small{color:#9cc2ee}
+.rowlabel{font-size:12px;color:var(--dim);margin:6px 0 4px;letter-spacing:.08em}
+.search{width:100%;margin:10px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:13px 16px;font-size:15px;font-family:inherit;outline:none}
+.search:focus{border-color:var(--accent)}
+.divider{border:none;border-top:1px solid var(--line);margin:24px -24px 30px}
+.group{margin-bottom:34px}
+.group h2{font-family:var(--serif);font-size:24px;margin:0 0 12px;font-weight:900}
+.group h2 small{font-family:var(--mono);font-size:13px;color:var(--dim);font-weight:400;margin-left:10px}
+.list{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.item{position:relative;padding:15px 20px 15px 24px;border-top:1px solid var(--line);cursor:pointer;transition:background .12s}
+.item:first-child{border-top:none}
+.item:hover{background:var(--panel2)}
+.item::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:2px;background:var(--c)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.meta .date{font-family:var(--mono)}
+.meta .cat{color:var(--c);font-weight:700}
+.tag{background:#232b36;border-radius:999px;padding:1px 10px;color:#c5ccd5;font-weight:600}
+.badge{font-size:11px;border:1px solid #5b4a1e;color:#e2c26a;border-radius:6px;padding:0 6px}
+.badge.ok{border-color:#2f5a3c;color:#7fd39a}
+.ttl{font-size:18px;font-weight:700;margin:5px 0 2px}
+.ttl .arrow{color:var(--dim);font-weight:400;margin-left:4px}
+.en{font-size:13px;color:var(--dim);margin-bottom:4px}
+.sum{color:#c3cad3;font-size:14.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.empty{color:var(--muted);text-align:center;padding:60px 0}
+footer{color:var(--dim);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:18px}
+/* modal */
+.mask{position:fixed;inset:0;background:rgba(5,8,12,.72);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;z-index:10}
+.mask.show{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:16px;max-width:760px;width:100%;padding:26px 28px 24px;position:relative}
+.modal .x{all:unset;cursor:pointer;position:absolute;right:18px;top:14px;font-size:26px;color:var(--muted)}
+.modal h3{font-family:var(--serif);font-size:24px;margin:8px 0 4px;line-height:1.35}
+.modal .en{font-size:14px;margin-bottom:14px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:0;border-top:1px solid var(--line);margin-top:10px}
+.kv div{padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.kv .k{color:var(--muted)}
+.kws{display:flex;flex-wrap:wrap;gap:6px}
+.kws span{background:#232b36;border-radius:6px;padding:0 8px;font-size:13px;color:#c5ccd5}
+.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#0d1620;font-weight:700;text-decoration:none;padding:10px 20px;border-radius:10px;font-size:15px}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line2);font-weight:500}
+.note{font-size:12.5px;color:var(--dim);margin-top:14px}
+@media (max-width:640px){h1{font-size:32px}.kv{grid-template-columns:86px 1fr}.wrap{padding:24px 16px 60px}.divider{margin:20px -16px 24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>環境抗生素抗藥性<br>資訊匯流站</h1>
+    <div class="updated" id="updated">更新於 —</div>
+  </header>
+  <p class="sub">每週一自動蒐整 WHO、UNEP、FAO、WOAH、OECD、歐盟、EEA、ECDC、各國主管機關公告，以及 PubMed、Scopus、Web of Science 文獻；點標題可看摘要與原始連結。<br><b>AI 輔助整理，內容經人工審查前僅供參考。</b></p>
+
+  <div class="seg" role="tablist">
+    <button class="on" data-view="time">依時間</button>
+    <button data-view="topic">依主題</button>
+  </div>
+  <div class="rowlabel">收錄批次</div>
+  <div class="chips" id="batchChips"></div>
+  <div class="rowlabel">分類</div>
+  <div class="chips" id="catChips"></div>
+  <div class="rowlabel">來源</div>
+  <div class="chips" id="srcChips"></div>
+  <input class="search" id="q" type="search" placeholder="搜尋標題、來源、關鍵字或摘要（例：消毒劑、UWWTD、qPCR）">
+  <hr class="divider">
+  <main id="out"></main>
+  <footer>環境面化學物質與抗生素風險治理計畫｜分類依計畫文獻收納標準（10 類）與月報議題分類｜資料欄位對應表 3.1-4、3.1-5</footer>
+</div>
+
+<div class="mask" id="mask" role="dialog" aria-modal="true">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const CATS={
+  1:{n:"化學檢測技術",c:"#f0a35e"},
+  2:{n:"生物檢測技術",c:"#7fd39a"},
+  3:{n:"ARGs 機制",c:"#c792ea"},
+  4:{n:"非抗生素共選",c:"#f07178"},
+  5:{n:"環境殘留與來源",c:"#e6c86e"},
+  6:{n:"ARGs 監測與指標",c:"#5fd1c8"},
+  7:{n:"污水處理與削減",c:"#82aaff"},
+  8:{n:"風險評估與預警",c:"#ff9e64"},
+  9:{n:"國際公告與政策",c:"#7fb2f0"},
+  10:{n:"我國法規與研究",c:"#e889c4"}
+};
+const WD="日一二三四五六";
+let DATA={items:[]}, st={view:"time",batch:"all",cat:"all",src:"all",q:""};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const md=d=>{const [y,m,dd]=d.split("-");return `${+m}/${+dd}`};
+const wd=d=>WD[new Date(d+"T00:00:00").getDay()];
+
+function filtered(ignore){
+  const q=st.q.trim().toLowerCase();
+  return DATA.items.filter(it=>{
+    if(ignore!=="batch"&&st.batch!=="all"&&it.batch!==st.batch)return false;
+    if(ignore!=="cat"&&st.cat!=="all"&&String(it.category)!==st.cat)return false;
+    if(ignore!=="src"&&st.src!=="all"&&it.source_type!==st.src)return false;
+    if(q){const hay=[it.title_zh,it.title_en,it.source,it.summary,it.key_points,it.implication,it.report_cat,(it.keywords||[]).join(" "),CATS[it.category]?.n].join(" ").toLowerCase();if(!hay.includes(q))return false}
+    return true;
+  });
+}
+function chipRow(el,key,entries,allLabel){
+  const base=filtered(key);
+  const cnt=v=>base.filter(it=>(key==="batch"?it.batch:key==="cat"?String(it.category):it.source_type)===v).length;
+  let h=`<button class="chip ${st[key]==="all"?"on":""}" data-k="${key}" data-v="all">${allLabel}<small>${base.length}</small></button>`;
+  for(const [v,label] of entries){h+=`<button class="chip ${st[key]===v?"on":""}" data-k="${key}" data-v="${esc(v)}">${esc(label)}<small>${cnt(v)}</small></button>`}
+  el.innerHTML=h;
+}
+function card(it){
+  const c=CATS[it.category]||{n:"未分類",c:"#888"};
+  return `<div class="item" style="--c:${c.c}" data-id="${esc(it.id)}" tabindex="0">
+    <div class="meta"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span>${esc(it.source)}</span><span class="badge ${it.review==="已審"?"ok":""}">${esc(it.review||"待審")}</span></div>
+    <div class="ttl">${esc(it.title_zh||it.title_en)}<span class="arrow">↗</span></div>
+    ${it.title_en&&it.title_zh?`<div class="en">${esc(it.title_en)}</div>`:""}
+    <div class="sum">${esc(it.summary)}</div></div>`;
+}
+function render(){
+  const batches=[...new Set(DATA.items.map(i=>i.batch))].sort().reverse();
+  chipRow($("#batchChips"),"batch",batches.map(b=>[b,`${md(b)}（${wd(b)}）收錄`]),"全部批次");
+  chipRow($("#catChips"),"cat",Object.keys(CATS).map(k=>[k,`${k}. ${CATS[k].n}`]),"全部分類");
+  chipRow($("#srcChips"),"src",[["官方機構","官方機構"],["學術文獻","學術文獻"]],"全部來源");
+  const items=filtered().sort((a,b)=>b.pub_date.localeCompare(a.pub_date));
+  if(!items.length){$("#out").innerHTML=`<div class="empty">沒有符合條件的資料</div>`;return}
+  const groups=new Map();
+  if(st.view==="time"){
+    for(const it of items){const k=it.pub_date.slice(0,7);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(it)}
+    $("#out").innerHTML=[...groups].map(([k,arr])=>{const [y,m]=k.split("-");return `<section class="group"><h2>${y} 年 ${+m} 月<small>${arr.length} 則</small></h2><div class="list">${arr.map(card).join("")}</div></section>`}).join("");
+  }else{
+    for(const it of items){const k=it.category;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(it)}
+    $("#out").innerHTML=[...groups].sort((a,b)=>a[0]-b[0]).map(([k,arr])=>`<section class="group"><h2>${k}. ${esc(CATS[k]?.n||"")}<small>${arr.length} 則</small></h2><div class="list">${arr.map(card).join("")}</div></section>`).join("");
+  }
+}
+function openItem(id){
+  const it=DATA.items.find(i=>i.id===id);if(!it)return;
+  const c=CATS[it.category]||{n:"",c:"#888"};
+  const row=(k,v)=>v?`<div class="k">${k}</div><div>${v}</div>`:"";
+  $("#modal").innerHTML=`<button class="x" aria-label="關閉">×</button>
+    <div class="meta" style="--c:${c.c}"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span class="badge ${it.review==="已審"?"ok":""}">${esc(it.review||"待審")}</span></div>
+    <h3>${esc(it.title_zh||it.title_en)}</h3>${it.title_en&&it.title_zh?`<div class="en">${esc(it.title_en)}</div>`:""}
+    <div class="kv">
+      ${row("資訊來源",esc(it.source))}${row("資料類型",esc(it.doc_type))}${row("國家／區域",esc(it.region))}
+      ${row("內容摘要",esc(it.summary))}${row("重點摘譯",esc(it.key_points))}${row("國內管理意涵",esc(it.implication))}${row("建議後續追蹤",esc(it.follow_up))}
+      ${it.keywords?.length?row("關鍵字",`<div class="kws">${it.keywords.map(k=>`<span>${esc(k)}</span>`).join("")}</div>`):""}
+      ${row("識別碼",[it.doi?`DOI: ${esc(it.doi)}`:"",it.pmid?`PMID: ${esc(it.pmid)}`:""].filter(Boolean).join("　"))}
+      ${row("收錄批次",esc(it.batch))}
+    </div>
+    <div class="actions"><a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener">開啟原始連結 ↗</a><button class="btn ghost" id="closeBtn">關閉</button></div>
+    <p class="note">摘要依據：${esc(it.basis||"—")}。AI 輔助整理，請以原始文件為準。</p>`;
+  $("#mask").classList.add("show");document.body.style.overflow="hidden";
+}
+function closeModal(){$("#mask").classList.remove("show");document.body.style.overflow=""}
+
+document.addEventListener("click",e=>{
+  const chip=e.target.closest(".chip");if(chip){st[chip.dataset.k]=chip.dataset.v;render();return}
+  const seg=e.target.closest(".seg button");if(seg){document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b===seg));st.view=seg.dataset.view;render();return}
+  const item=e.target.closest(".item");if(item){openItem(item.dataset.id);return}
+  if(e.target.id==="mask"||e.target.closest(".x")||e.target.id==="closeBtn")closeModal();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();if(e.key==="Enter"&&e.target.classList?.contains("item"))openItem(e.target.dataset.id)});
+$("#q").addEventListener("input",e=>{st.q=e.target.value;render()});
+
+fetch("data/items.json?t="+Date.now()).then(r=>r.json()).then(d=>{
+  DATA=d;
+  const u=new Date(d.updated_at);
+  const p=n=>String(n).padStart(2,"0");
+  $("#updated").textContent=`更新於 ${u.getFullYear()}/${p(u.getMonth()+1)}/${p(u.getDate())} ${p(u.getHours())}:${p(u.getMinutes())}`;
+  render();
+}).catch(()=>{$("#out").innerHTML=`<div class="empty">資料載入失敗，請稍後重新整理</div>`});
+</script>
+</body>
+</html>
