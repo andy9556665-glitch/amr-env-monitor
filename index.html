@@ -258,13 +258,51 @@ document.addEventListener("click",e=>{
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();if(e.key==="Enter"&&e.target.classList?.contains("item"))openItem(e.target.dataset.id)});
 $("#q").addEventListener("input",e=>{st.q=e.target.value;render()});
 
-fetch("data/items.json?t="+Date.now()).then(r=>r.json()).then(d=>{
-  DATA=d;
-  const u=new Date(d.updated_at);
-  const p=n=>String(n).padStart(2,"0");
-  $("#updated").textContent=`更新於 ${u.getFullYear()}/${p(u.getMonth()+1)}/${p(u.getDate())} ${p(u.getHours())}:${p(u.getMinutes())}`;
-  render();
-}).catch(()=>{$("#out").innerHTML=`<div class="empty">資料載入失敗，請稍後重新整理</div>`});
+const SHEET_CSV = "";  // 試算表「發布」分頁的 CSV 網址
+function parseCSV(t){
+  const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;
+    else if(c===','){row.push(f);f=""}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=""}
+    else f+=c}
+  if(f!==""||row.length){row.push(f);rows.push(row)}
+  return rows;
+}
+function editionOf(d){const [y,m,dd]=d.split("-").map(Number);let yy=y,mm=m;if(dd>=25){mm++;if(mm>12){mm=1;yy++}}return `${yy}-${String(mm).padStart(2,"0")}`}
+function fromSheet(text){
+  const rows=parseCSV(text);
+  const updated=(rows[0]||[])[1]||"";
+  const hi=rows.findIndex(r=>r[0]==="ID");
+  const H=rows[hi];const col=n=>H.indexOf(n);
+  const items=rows.slice(hi+1).filter(r=>r[0]).map(r=>{
+    const g=n=>(r[col(n)]||"").trim();
+    const it={id:g("ID"),batch:g("收錄批次"),pub_date:g("發布日期"),source:g("資訊來源"),source_type:g("來源類型"),
+      region:g("國家或區域"),doc_type:g("資料類型"),title_zh:g("文件名稱（中文）"),title_en:g("文件名稱（原文）"),
+      category:Number(g("類別編號"))||0,report_cat:g("月報分類"),summary:g("內容摘要"),key_points:g("重點摘譯"),
+      implication:g("國內管理意涵"),follow_up:g("建議後續追蹤"),keywords:g("關鍵字").split(/[、,，]/).map(x=>x.trim()).filter(Boolean),
+      url:g("原始連結"),pmid:g("PMID"),doi:g("DOI"),basis:g("摘要依據"),review:g("審查狀態")};
+    if(it.source_type==="學術文獻"&&it.pub_date)it.edition=editionOf(it.pub_date);
+    return it;});
+  return {updated,items};
+}
+function showUpdated(text){$("#updated").textContent="更新於 "+text}
+async function load(){
+  if(SHEET_CSV){
+    try{
+      const t=await fetch(SHEET_CSV+(SHEET_CSV.includes("?")?"&":"?")+"t="+Date.now()).then(r=>{if(!r.ok)throw 0;return r.text()});
+      const d=fromSheet(t);
+      if(d.items.length){DATA={items:d.items};showUpdated(d.updated);render();return}
+    }catch(e){}
+  }
+  try{
+    const d=await fetch("data/items.json?t="+Date.now()).then(r=>r.json());
+    DATA=d;const u=new Date(d.updated_at);const p=n=>String(n).padStart(2,"0");
+    showUpdated(`${u.getFullYear()}/${p(u.getMonth()+1)}/${p(u.getDate())} ${p(u.getHours())}:${p(u.getMinutes())}`);render();
+  }catch(e){$("#out").innerHTML=`<div class="empty">資料載入失敗，請稍後重新整理</div>`}
+}
+load();
 </script>
 </body>
 </html>
