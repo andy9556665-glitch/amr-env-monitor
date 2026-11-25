@@ -244,7 +244,7 @@ function openItem(id){
       ${row("期別",esc(editionLabel(it)||periodOf(it).label))}${row("收錄日期",esc(it.batch))}
     </div>
     <div class="actions"><a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener">開啟原始連結 ↗</a><button class="btn ghost" id="closeBtn">關閉</button></div>
-    <p class="note">摘要依據：${esc(it.basis||"—")}。AI 輔助整理，請以原始文件為準。</p>`;
+    <p class="note">摘要依據：${esc(it.basis||"—")}。${it.basis==="團隊撰寫"?"本摘要由研究團隊撰寫":"AI 輔助整理"}，請以原始文件為準。</p>`;
   $("#mask").classList.add("show");document.body.style.overflow="hidden";
 }
 function closeModal(){$("#mask").classList.remove("show");document.body.style.overflow=""}
