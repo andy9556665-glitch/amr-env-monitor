@@ -28,6 +28,14 @@
    - `environmental antimicrobial resistance risk assessment OR surveillance`
 4. **搜尋官方機構**：以 WebSearch 針對各機構搜尋蒐整區間內的新公告（關鍵字 antimicrobial resistance / antibiotic / AMR environment / wastewater），必要時 WebFetch 原文確認日期與內容：
    WHO、UNEP、FAO、WOAH、OECD、European Commission（DG ENV、DG SANTE、JRC）、EEA、ECDC、EMA、EFSA、US EPA、US CDC、UK（UKHSA、Environment Agency、DEFRA）、Health Canada / Environment and Climate Change Canada、日本環境省／厚生勞動省、臺灣環境部、衛福部疾管署、農業部。
+   已實測可直接 WebFetch 的列表頁（2026-11-25）：
+   - 歐盟執委會 AMR：https://health.ec.europa.eu/antimicrobial-resistance_en
+   - EEA 出版品：https://www.eea.europa.eu/en/analysis/publications
+   - 英國政府新聞搜尋：https://www.gov.uk/search/news-and-communications?keywords=antimicrobial+resistance&order=updated-newest
+   - 日本環境省新聞稿：https://www.env.go.jp/press/
+   - 臺灣環境部：https://www.moenv.gov.tw/
+   - 衛福部新聞：https://www.mohw.gov.tw/
+   OECD 主題頁與 US EPA 新聞頁讀不到個別項目，改用 WebSearch（例如 `site:oecd.org antimicrobial resistance`、`site:epa.gov antimicrobial OR antibiotic`）。
 5. **篩選與分類**：只收與「環境面」抗生素、化學物質與抗藥性相關者，純臨床個案、新藥研發等排除。每筆依下方 10 類擇一（主類），並給月報分類（政策與法規動態／監測與檢測技術／風險評估與管理案例／國內可參考方向）。
 6. **撰寫摘要**：盡量讀取摘要或原文（PubMed 文章頁、Europe PMC、出版社頁、官方原文）。`basis` 填實際依據（摘要／全文／官方新聞稿／題名）。只依題名者，摘要句末加「（依題名整理，待回查摘要）」。不得杜撰數據。
 7. **更新網站**：把新項目加到 `data/items.json` 的 `items`（`batch` = 本次執行日 YYYY-MM-DD，`review` = "待審"），更新 `updated_at`（含 +08:00）與 `coverage`。用 `python3 -m json.tool` 驗證後 commit 並 push 到 `main`。commit 訊息：`週更新 YYYY-MM-DD：新增 N 筆`。

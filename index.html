@@ -4,71 +4,74 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>環境抗生素抗藥性資訊匯流站</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%237fb2f0'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%230f1419' font-family='sans-serif' font-weight='700'%3EAMR%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%237f95a6'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-weight='700'%3EAMR%3C/text%3E%3C/svg%3E">
 <meta name="description" content="環境面化學物質與抗生素風險治理計畫：國際組織公告與學術文獻每週彙整">
 <style>
 :root{
-  --bg:#0f1419; --panel:#161c24; --panel2:#1b222c; --line:#2a323d; --line2:#343d4a;
-  --text:#e8ebef; --muted:#9aa4b1; --dim:#6f7a88; --accent:#7fb2f0; --accent-bg:#22344d;
+  --bg:#f3efe9; --panel:#fbf9f6; --panel2:#f1ece5; --line:#ddd5ca; --line2:#cfc5b8;
+  --text:#2f2b27; --muted:#5f5850; --dim:#7b7268; --accent:#6f8597; --accent-bg:#e3e9ee; --accent-text:#3e5263;
   --serif:"Noto Serif TC","Source Han Serif TC","Songti TC","PMingLiU",serif;
   --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6}
-a{color:var(--accent)}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65}
+a{color:var(--accent-text)}
 .wrap{max-width:1040px;margin:0 auto;padding:36px 24px 80px}
 header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-h1{font-family:var(--serif);font-size:44px;font-weight:900;margin:0;letter-spacing:.02em;line-height:1.15}
+h1{font-family:var(--serif);font-size:44px;font-weight:900;margin:0;letter-spacing:.02em;line-height:1.15;color:#2b2723}
 .updated{font-family:var(--mono);font-size:14px;color:var(--muted);padding-top:14px;white-space:nowrap}
 .sub{color:var(--muted);margin:14px 0 22px;font-size:15px}
-.sub b{color:var(--text);font-weight:500}
+.sub b{color:var(--text);font-weight:600}
 .seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:16px}
 .seg button{all:unset;cursor:pointer;padding:7px 18px;border-radius:10px;color:var(--muted);font-size:15px}
-.seg button.on{background:var(--accent);color:#0d1620;font-weight:600}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px;scrollbar-width:thin}
-.chip{all:unset;cursor:pointer;flex:none;border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:6px 15px;font-size:14px;font-weight:600;white-space:nowrap}
+.seg button.on{background:#5f7586;color:#fff;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{all:unset;cursor:pointer;border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:5px 14px;font-size:14px;font-weight:600;white-space:nowrap;color:var(--text)}
+.chip:hover{background:var(--panel2)}
 .chip small{font-family:var(--mono);font-weight:400;color:var(--dim);margin-left:6px;font-size:12px}
-.chip.on{background:var(--accent-bg);border-color:var(--accent);color:#cfe3fb}
-.chip.on small{color:#9cc2ee}
-.rowlabel{font-size:12px;color:var(--dim);margin:6px 0 4px;letter-spacing:.08em}
-.search{width:100%;margin:10px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:13px 16px;font-size:15px;font-family:inherit;outline:none}
-.search:focus{border-color:var(--accent)}
+.chip .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:7px;vertical-align:1px}
+.chip.on{background:var(--accent-bg);border-color:#8fa2b2;color:var(--accent-text)}
+.chip.on small{color:var(--accent-text)}
+.rowlabel{font-size:12.5px;color:var(--muted);margin:6px 0 6px;letter-spacing:.08em;font-weight:600}
+.search{width:100%;margin:8px 0 0;background:var(--panel);border:1px solid var(--line2);border-radius:12px;color:var(--text);padding:13px 16px;font-size:15px;font-family:inherit;outline:none}
+.search::placeholder{color:var(--dim)}
+.search:focus{border-color:#8fa2b2;box-shadow:0 0 0 3px #e3e9ee}
 .divider{border:none;border-top:1px solid var(--line);margin:24px -24px 30px}
 .group{margin-bottom:34px}
 .group h2{font-family:var(--serif);font-size:24px;margin:0 0 12px;font-weight:900}
 .group h2 small{font-family:var(--mono);font-size:13px;color:var(--dim);font-weight:400;margin-left:10px}
-.list{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
-.item{position:relative;padding:15px 20px 15px 24px;border-top:1px solid var(--line);cursor:pointer;transition:background .12s}
+.list{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);box-shadow:0 1px 2px rgba(80,65,50,.05)}
+.item{position:relative;padding:15px 20px 15px 26px;border-top:1px solid var(--line);cursor:pointer;transition:background .12s}
 .item:first-child{border-top:none}
 .item:hover{background:var(--panel2)}
-.item::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:2px;background:var(--c)}
+.item::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:2px;background:var(--c)}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .meta .date{font-family:var(--mono)}
-.meta .cat{color:var(--c);font-weight:700}
-.tag{background:#232b36;border-radius:999px;padding:1px 10px;color:#c5ccd5;font-weight:600}
-.badge{font-size:11px;border:1px solid #5b4a1e;color:#e2c26a;border-radius:6px;padding:0 6px}
-.badge.ok{border-color:#2f5a3c;color:#7fd39a}
-.ttl{font-size:18px;font-weight:700;margin:5px 0 2px}
+.meta .cat{color:var(--t);font-weight:700}
+.tag{background:#ebe5dc;border-radius:999px;padding:1px 10px;color:#4f4842;font-weight:600}
+.badge{font-size:11.5px;border:1px solid #c9b07e;color:#7d6431;background:#f6efdf;border-radius:6px;padding:0 6px}
+.badge.ok{border-color:#9db39a;color:#45603f;background:#e8efe5}
+.ttl{font-size:18px;font-weight:700;margin:5px 0 2px;color:#2b2723}
 .ttl .arrow{color:var(--dim);font-weight:400;margin-left:4px}
 .en{font-size:13px;color:var(--dim);margin-bottom:4px}
-.sum{color:#c3cad3;font-size:14.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sum{color:#4a443e;font-size:14.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .empty{color:var(--muted);text-align:center;padding:60px 0}
-footer{color:var(--dim);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:18px}
-/* modal */
-.mask{position:fixed;inset:0;background:rgba(5,8,12,.72);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;z-index:10}
+footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:18px}
+.mask{position:fixed;inset:0;background:rgba(60,52,44,.42);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;z-index:10}
 .mask.show{display:flex}
-.modal{background:var(--panel);border:1px solid var(--line2);border-radius:16px;max-width:760px;width:100%;padding:26px 28px 24px;position:relative}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:16px;max-width:760px;width:100%;padding:26px 28px 24px;position:relative;box-shadow:0 12px 40px rgba(60,50,40,.18)}
 .modal .x{all:unset;cursor:pointer;position:absolute;right:18px;top:14px;font-size:26px;color:var(--muted)}
 .modal h3{font-family:var(--serif);font-size:24px;margin:8px 0 4px;line-height:1.35}
 .modal .en{font-size:14px;margin-bottom:14px}
 .kv{display:grid;grid-template-columns:110px 1fr;gap:0;border-top:1px solid var(--line);margin-top:10px}
 .kv div{padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
-.kv .k{color:var(--muted)}
+.kv .k{color:var(--muted);font-weight:600}
 .kws{display:flex;flex-wrap:wrap;gap:6px}
-.kws span{background:#232b36;border-radius:6px;padding:0 8px;font-size:13px;color:#c5ccd5}
+.kws span{background:#ebe5dc;border-radius:6px;padding:0 8px;font-size:13px;color:#4f4842}
 .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#0d1620;font-weight:700;text-decoration:none;padding:10px 20px;border-radius:10px;font-size:15px}
+.btn{display:inline-flex;align-items:center;gap:6px;background:#5f7586;color:#fff;font-weight:700;text-decoration:none;padding:10px 20px;border-radius:10px;font-size:15px;border:none;cursor:pointer;font-family:inherit}
+.btn:hover{background:#51667a}
 .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line2);font-weight:500}
 .note{font-size:12.5px;color:var(--dim);margin-top:14px}
 @media (max-width:640px){h1{font-size:32px}.kv{grid-template-columns:86px 1fr}.wrap{padding:24px 16px 60px}.divider{margin:20px -16px 24px}}
@@ -104,16 +107,16 @@ footer{color:var(--dim);font-size:13px;margin-top:40px;border-top:1px solid var(
 
 <script>
 const CATS={
-  1:{n:"化學檢測技術",c:"#f0a35e"},
-  2:{n:"生物檢測技術",c:"#7fd39a"},
-  3:{n:"ARGs 機制",c:"#c792ea"},
-  4:{n:"非抗生素共選",c:"#f07178"},
-  5:{n:"環境殘留與來源",c:"#e6c86e"},
-  6:{n:"ARGs 監測與指標",c:"#5fd1c8"},
-  7:{n:"污水處理與削減",c:"#82aaff"},
-  8:{n:"風險評估與預警",c:"#ff9e64"},
-  9:{n:"國際公告與政策",c:"#7fb2f0"},
-  10:{n:"我國法規與研究",c:"#e889c4"}
+  1:{n:"化學檢測技術",c:"#c9a27e",t:"#8a6340"},
+  2:{n:"生物檢測技術",c:"#9bb09a",t:"#4f6a4d"},
+  3:{n:"ARGs 機制",c:"#a796b3",t:"#66547a"},
+  4:{n:"非抗生素共選",c:"#c79a9a",t:"#8a5656"},
+  5:{n:"環境殘留與來源",c:"#c8b78a",t:"#7a6a3c"},
+  6:{n:"ARGs 監測與指標",c:"#8fb0ad",t:"#456b68"},
+  7:{n:"污水處理與削減",c:"#8ea1b8",t:"#4b5f78"},
+  8:{n:"風險評估與預警",c:"#c4a08f",t:"#85594a"},
+  9:{n:"國際公告與政策",c:"#7f95a6",t:"#465c6d"},
+  10:{n:"我國法規與研究",c:"#b693a6",t:"#7a5268"}
 };
 const WD="日一二三四五六";
 let DATA={items:[]}, st={view:"time",batch:"all",cat:"all",src:"all",q:""};
@@ -133,15 +136,16 @@ function filtered(ignore){
   });
 }
 function chipRow(el,key,entries,allLabel){
+  const dot=v=>key==="cat"&&CATS[v]?`<span class="dot" style="--c:${CATS[v].c}"></span>`:"";
   const base=filtered(key);
   const cnt=v=>base.filter(it=>(key==="batch"?it.batch:key==="cat"?String(it.category):it.source_type)===v).length;
   let h=`<button class="chip ${st[key]==="all"?"on":""}" data-k="${key}" data-v="all">${allLabel}<small>${base.length}</small></button>`;
-  for(const [v,label] of entries){h+=`<button class="chip ${st[key]===v?"on":""}" data-k="${key}" data-v="${esc(v)}">${esc(label)}<small>${cnt(v)}</small></button>`}
+  for(const [v,label] of entries){h+=`<button class="chip ${st[key]===v?"on":""}" data-k="${key}" data-v="${esc(v)}">${dot(v)}${esc(label)}<small>${cnt(v)}</small></button>`}
   el.innerHTML=h;
 }
 function card(it){
-  const c=CATS[it.category]||{n:"未分類",c:"#888"};
-  return `<div class="item" style="--c:${c.c}" data-id="${esc(it.id)}" tabindex="0">
+  const c=CATS[it.category]||{n:"未分類",c:"#aaa",t:"#555"};
+  return `<div class="item" style="--c:${c.c};--t:${c.t}" data-id="${esc(it.id)}" tabindex="0">
     <div class="meta"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span>${esc(it.source)}</span><span class="badge ${it.review==="已審"?"ok":""}">${esc(it.review||"待審")}</span></div>
     <div class="ttl">${esc(it.title_zh||it.title_en)}<span class="arrow">↗</span></div>
     ${it.title_en&&it.title_zh?`<div class="en">${esc(it.title_en)}</div>`:""}
@@ -165,10 +169,10 @@ function render(){
 }
 function openItem(id){
   const it=DATA.items.find(i=>i.id===id);if(!it)return;
-  const c=CATS[it.category]||{n:"",c:"#888"};
+  const c=CATS[it.category]||{n:"",c:"#aaa",t:"#555"};
   const row=(k,v)=>v?`<div class="k">${k}</div><div>${v}</div>`:"";
   $("#modal").innerHTML=`<button class="x" aria-label="關閉">×</button>
-    <div class="meta" style="--c:${c.c}"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span class="badge ${it.review==="已審"?"ok":""}">${esc(it.review||"待審")}</span></div>
+    <div class="meta" style="--c:${c.c};--t:${c.t}"><span class="date">${esc(it.pub_date)}</span><span class="cat">${it.category}・${esc(c.n)}</span><span class="tag">#${esc(it.report_cat)}</span><span class="badge ${it.review==="已審"?"ok":""}">${esc(it.review||"待審")}</span></div>
     <h3>${esc(it.title_zh||it.title_en)}</h3>${it.title_en&&it.title_zh?`<div class="en">${esc(it.title_en)}</div>`:""}
     <div class="kv">
       ${row("資訊來源",esc(it.source))}${row("資料類型",esc(it.doc_type))}${row("國家／區域",esc(it.region))}
