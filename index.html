@@ -258,7 +258,7 @@ document.addEventListener("click",e=>{
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();if(e.key==="Enter"&&e.target.classList?.contains("item"))openItem(e.target.dataset.id)});
 $("#q").addEventListener("input",e=>{st.q=e.target.value;render()});
 
-const SHEET_CSV = "";  // 試算表「發布」分頁的 CSV 網址
+const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBRjbskLBjCokTtkhEO6_vJZz7WQd3wTya9_QKoteNliAMCYgP9lc63ZIMkvCkT1j5soucXcTzGncz/pub?gid=157248844&single=true&output=csv";  // 試算表「發布」分頁的 CSV 網址
 function parseCSV(t){
   const rows=[];let row=[],f="",q=false;
   for(let i=0;i<t.length;i++){const c=t[i];
